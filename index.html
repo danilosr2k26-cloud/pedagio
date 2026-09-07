@@ -637,7 +637,6 @@ const DATA = {
   install: [
     ['Toque em "Baixar o aplicativo"','O download começa na hora. Se o navegador pedir confirmação, escolha <b>Baixar mesmo assim</b> — o arquivo é assinado e vem do nosso servidor.','down'],
     ['Abra o arquivo baixado','Puxe a barra de notificações e toque em <b>pedagio.apk</b>, ou procure em <b>Arquivos → Downloads</b>.','doc'],
-    ['Google Play Protect', 'Por segurança o Google Play Protect pode bloquear a instalação. Clique em <b>Instalar assim mesmo</b> para confirmar que é você mesmo que está instalando.','shield'],
     ['Permita a instalação de apps desconhecidos','O Android avisa que o app não veio da loja. Toque em <b>Configurações</b> e ative <b>Permitir desta fonte</b> para o navegador usado. É a permissão padrão para qualquer APK.','shield'],
     ['Confirme a instalação','Volte para a tela anterior e toque em <b>Instalar</b>. Leva poucos segundos.','check'],
     ['Ative o aplicativo','Vá em Configurações > Acessibilidade > Ative o app <b>Pedagio</b>','check'],
@@ -874,27 +873,25 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') openM(false); }
     body.appendChild(el); scroll(); }
 
   function menu(){ setQuick([
-    {label:'\u{1F4F2} Como instalar', action:flowInstall},
-    {label:'⬇️ Baixar agora', primary:true, action:flowDownload},
+    {label:'\u{1F4F2} Ver instruções e baixar', primary:true, action:flowInstall},
     {label:'❓ Tirar uma dúvida', action:flowFaq}
   ]); }
-  function flowDownload(){ botSay(['Perfeito! Antes de baixar, um lembrete rápido de segurança \u{1F512}',
-    'Só instale o app a partir deste site oficial. Nunca instale um APK recebido por WhatsApp, SMS ou link encurtado.'],
-    ()=>{ downloadCard(); botSay(['Assim que o download terminar, posso te guiar na instalação. Quer o passo a passo?'],
-      ()=> setQuick([{label:'Sim, me guiar',primary:true,action:flowInstall},{label:'Já sei instalar',action:end}])); }); }
+  // O download só é liberado ao FINAL de todos os passos.
   function flowInstall(){
     const steps=STEPS.map(s=>`<b>${s[0]}</b><br><span class="text-ink-soft">${s[1]}</span>`); let i=0;
-    function step(){ if(i>=steps.length){ botSay(['Pronto! Esse é o passo a passo completo. \u{1F389} Quer baixar o app agora?'],
-        ()=> setQuick([{label:'⬇️ Baixar o app',primary:true,action:()=>{ downloadCard(); afterDl(); }},{label:'Voltar ao início',action:greet}])); return; }
+    function finish(){ botSay(['Prontinho, esse é o passo a passo completo! \u{1F389}',
+      'Lembrete de segurança \u{1F512}: instale somente o arquivo baixado aqui. Nunca instale um APK recebido por WhatsApp, SMS ou link.'],
+      ()=>{ downloadCard(); afterDl(); }); }
+    function step(){ if(i>=steps.length){ finish(); return; }
       botSay([`Passo ${i+1} de ${steps.length}:<br>${steps[i]}`],()=>{ i++;
-        setQuick(i<steps.length?[{label:'Próximo passo ▶',primary:true,action:()=>{quick.innerHTML='';step();}},{label:'⬇️ Baixar agora',action:()=>{downloadCard();afterDl();}}]
-                               :[{label:'⬇️ Baixar o app',primary:true,action:()=>{downloadCard();afterDl();}}]); }); }
-    botSay(['Show! Vou te mostrar a instalação em passos rápidos. É só ir tocando em "Próximo".'], step); }
+        setQuick([{label:(i<steps.length?'Próximo passo ▶':'Concluir e baixar ⬇️'),primary:true,action:()=>{quick.innerHTML='';step();}}]); }); }
+    botSay(['Show! Vou te mostrar a instalação em passos rápidos. É só ir tocando em "Próximo".',
+      'O botão para baixar o app aparece no final, depois do último passo. \u{1F44D}'], step); }
   function afterDl(){ botSay(['Qualquer coisa é só chamar. Precisa de mais alguma coisa?'],
-    ()=> setQuick([{label:'Ver como instalar',action:flowInstall},{label:'Tirar uma dúvida',action:flowFaq},{label:'Encerrar',action:end}])); }
+    ()=> setQuick([{label:'Ver instruções de novo',action:flowInstall},{label:'Tirar uma dúvida',action:flowFaq},{label:'Encerrar',action:end}])); }
   function flowFaq(){ botSay(['Sobre o que é a sua dúvida?'], ()=>{ setQuick(FAQ.slice(0,5).map(f=>({
     label: f[0].length>34?f[0].slice(0,33)+'…':f[0],
-    action:()=> botSay([f[1]], ()=> setQuick([{label:'Outra dúvida',action:flowFaq},{label:'⬇️ Baixar o app',primary:true,action:()=>{downloadCard();afterDl();}},{label:'Voltar',action:greet}])) }))); }); }
+    action:()=> botSay([f[1]], ()=> setQuick([{label:'Outra dúvida',action:flowFaq},{label:'\u{1F4F2} Ver instruções e baixar',primary:true,action:flowInstall},{label:'Voltar',action:greet}])) }))); }); }
   function end(){ botSay(['Combinado! Boa viagem e boas passagens sem parar. \u{1F44B}'], ()=> quick.innerHTML=''); }
   function greet(){ botSay(['Como posso ajudar?'], menu); }
 
