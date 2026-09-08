@@ -832,7 +832,7 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') openM(false); }
     if(who==='me'){ el.className='flex justify-end';
       el.innerHTML='<div class="max-w-[80%] rounded-2xl rounded-tr-sm bg-brand-600 p-3 text-sm leading-relaxed text-white shadow-sm">'+esc(html)+'</div>';
     } else { el.className='flex gap-2';
-      el.innerHTML='<span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-600 text-white"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-4a8 8 0 0 1 4-14 8 8 0 0 1 14 7Z"/></svg></span><div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-white p-3 text-sm leading-relaxed text-ink shadow-sm">'+html+'</div>';
+      el.innerHTML='<span class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-600 text-white"><img src="img/chat.png" alt="" srcset="" style="width: 50%;"></span><div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-white p-3 text-sm leading-relaxed text-ink shadow-sm">'+html+'</div>';
     }
     body.appendChild(el); scroll(); return el;
   }
