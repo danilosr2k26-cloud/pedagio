@@ -802,7 +802,20 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') openM(false); }
 
   $('#chatFab',wrap).onclick=open; $('#chatClose',wrap).onclick=close; $('#chatBackdrop',wrap).onclick=close;
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
-  $$('[data-chat-open]').forEach(el=> el.addEventListener('click',e=>{ e.preventDefault(); open(); }));
+  $$('[data-chat-open]').forEach(el => el.addEventListener('click', e => {
+  e.preventDefault();
+
+  // Conversão Google Ads — abertura do assistente
+  if (typeof gtag === 'function') {
+    gtag('event', 'conversion', {
+      'send_to': 'AW-18438213906/vkmVCNWHjvIcEJKig9hE',
+      'value': 1.0,
+      'currency': 'BRL'
+    });
+  }
+
+  open();
+}));
 })();
 </script>
 </body>
